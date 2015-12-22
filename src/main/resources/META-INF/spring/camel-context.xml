@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configures the Camel Context-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:osgi="http://camel.apache.org/schema/osgi"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd http://camel.apache.org/schema/osgi http://camel.apache.org/schema/osgi/camel-osgi.xsd">
+
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="timer://myTimer?fixedRate=true&amp;period=5000"/>
+            <to uri="log:EXAMPLE-ROUTE"/>
+        </route>
+        <route>
+            <from uri="timer://fireJmsMessage?period=50"/>
+            <to uri="activemq:myQueue?username=admin&amp;password=admin"/>
+        </route>
+    </camelContext>
+
+    <camelContext id="camel5" xmlns="http://camel.apache.org/schema/spring">
+        <routeBuilder ref="myBuilder" />
+
+    </camelContext>
+
+    <bean id="myBuilder" class="com.packtpub.servicemixhowto.MyRoute"/>
+
+    <camelContext id="camel6" xmlns="http://camel.apache.org/schema/spring">
+        <routeBuilder ref="myConsumer" />
+
+    </camelContext>
+
+    <bean id="myConsumer" class="com.packtpub.servicemixhowto.MyConsumer"/>
+
+</beans>
